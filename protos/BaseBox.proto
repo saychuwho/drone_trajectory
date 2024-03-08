@@ -1,0 +1,29 @@
+#VRML_SIM R2023b utf8
+# Describe the functionality of your PROTO here.
+
+
+PROTO BaseBox [
+  field SFVec3f translation 1 1 0
+  field SFRotation rotation 0 0 1 0
+  field SFVec3f size 1 1 1
+  field SFString name "base_box"
+]
+{
+  Solid {
+    translation IS translation
+    rotation IS rotation
+    children[
+      DEF BOX_SHAPE Shape{
+        appearance PBRAppearance{
+          roughness 1
+          metalness 0
+        }
+        geometry Box{
+          size IS size
+        }
+      }
+    ]
+    name IS name
+    boundingObject USE BOX_SHAPE
+  }
+}

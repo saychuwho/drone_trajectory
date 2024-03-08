@@ -1,0 +1,2 @@
+""" energy model for drone """
+
