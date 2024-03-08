@@ -73,6 +73,8 @@ A* algorithm과 Theta* algorithm이 [path_generator.py](/controllers/grid_env_ge
 
 Drone의 energy model은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)를 참고해 만들어질 예정이다.
 
+Drone의 energy model는 webots world에서 drone이 움직일 때 에너지 소비량을 수치화할 때와, path generation 과정에서 예상 에너지 소모량 가중치를 구할 때 사용된다.
+
 ### Drone Controller
 
 [drone_controller.py](/controllers/drone_controller/drone_controller.py)를 이용해 webots world에 있는 drone을 움직인다. 현재는 수동 조작밖에 안되지만, 추후 생성된 path를 따라가도록 controller를 만들 것이다.
