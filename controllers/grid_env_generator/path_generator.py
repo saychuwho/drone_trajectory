@@ -24,6 +24,7 @@ import numpy as np
 from datetime import datetime
 import os
 
+# from ..drone_controller import energy_model
 
 # destination vector
 # combination of dz index + dx_dy_index should be used
@@ -32,7 +33,7 @@ dy = [-1,0,1,-1,0,1,-1,0,1]
 dz = [-1, 0, 1]
 
 
-def a_star(grid, grid_size, start, dest, is_controller=True):
+def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     if not is_controller: print("# generating path with a_star")
 
     is_print = False if is_controller else True
@@ -117,7 +118,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True):
     return paths, paths_smooth
 
 
-def theta_star(grid, grid_size, start, dest, is_controller=True):
+def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     if not is_controller: print("# generating path with a_star")
 
     is_print = False if is_controller else True

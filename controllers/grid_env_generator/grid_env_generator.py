@@ -49,6 +49,17 @@ gen_map_matrix, gen_occupancy_matrix = matrix_gen(gen_map, xsize, ysize)
 print("... generating start, dest ...")
 start, dest = start_dest_generate(gen_occupancy_matrix, xsize, ysize, zsize)
 
+print("... place drone at start point ...")
+drone = supervisor.getFromDef("DRONE")
+drone_translation_field = drone.getField('translation')
+init_drone_position = [start[0], start[1], start[2]]  # `start` is tuple. so we need to change it into `List`
+drone_translation_field.setSFVec3f(init_drone_position)
+
+viewpoint = supervisor.getFromDef("VIEWPOINT")
+viewpoint_position_field = viewpoint.getField('position')
+init_viewpoint_position = [-3 + start[0], 0 + start[1], 1.5 + start[2]]
+viewpoint_position_field.setSFVec3f(init_viewpoint_position)
+
 print("... generating grid ...")
 grid = grid_gen(gen_occupancy_matrix, xsize, ysize, zsize)
 

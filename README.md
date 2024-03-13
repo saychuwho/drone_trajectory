@@ -69,11 +69,15 @@ A* algorithm과 Theta* algorithm이 [path_generator.py](/controllers/grid_env_ge
 
 ### Energy Model for Drone
 
-[energy_model.py](/controllers/drone_controller/energy_model.py)에 drone의 energy model을 구현할 예정이다. 
+[energy_model.py](/controllers/drone_controller/energy_model.py)에 drone의 energy model을 구현했다.
 
-Drone의 energy model은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)를 참고해 만들어질 예정이다.
+Drone의 energy model은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)의 equation (14)와 equation (15)를 참고해 만들어졌다.
 
-Drone의 energy model는 webots world에서 drone이 움직일 때 에너지 소비량을 수치화할 때와, path generation 과정에서 예상 에너지 소모량 가중치를 구할 때 사용된다.
+![](/image/table1_eq_14_eq_15.png)
+
+Energy model에서 사용된 상수들은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)의 TABLE 1에 구하는 방법이 나와있지만, 이번 프로젝트에서는 TABLE 3의 상수들을 사용했다. 이는 energy model에 사용되는 다양한 상수들이 실험적으로 측정되어야 하지만, 현실 세계의 드론을 현재 가지고 있지는 않기 때문에 상수들을 구할 수 없었기 때문이다.
+
+![](/image/table3.png)
 
 ### Drone Controller
 
@@ -81,7 +85,7 @@ Drone의 energy model는 webots world에서 drone이 움직일 때 에너지 소
 
 ## References
 
-1. D. Sartori, D. Zou and W. Yu, "An efficient approach to near-optimal 3D trajectory design in cluttered environments for multirotor UAVs," 2019 IEEE 15th International Conference on Automation Science and Engineering (CASE), Vancouver, BC, Canada, 2019, pp. 1016-1022, doi: 10.1109/COASE.2019.8842980.
+1. D. Sartori, D. Zou and W. Yu, "An efficient approach to near-optimal 3D trajectory design in cluttered environments for multirotor UAVs," 2019 IEEE 15th International Conference on Automation Science and Engineering (CASE), Vancouver, BC, Canada, 2019, pp. 1016-1022, doi: https://doi.org/10.1109/COASE.2019.8842980.
 2. De Filippis, L., Guglieri, G. & Quagliotti, F. Path Planning Strategies for UAVS in 3D Environments. J Intell Robot Syst 65, 247–264 (2012). https://doi.org/10.1007/s10846-011-9568-2
 3. K. Daniel, A. Nash, S. Koeing, A. Felner, "Theta*:Any-Angle Path Planning on Grids," *Journal of Artifical Intelligence Research*, vol. 39, pp. 533-579, Oct 2010. https://doi.org/10.1613/jair.2994
-4. Z. Liu, R. Sengupta and A. Kurzhanskiy, "A power consumption model for multi-rotor small unmanned aircraft systems," 2017 International Conference on Unmanned Aircraft Systems (ICUAS), Miami, FL, USA, 2017, pp. 310-315, doi: 10.1109/ICUAS.2017.7991310.
+4. Z. Liu, R. Sengupta and A. Kurzhanskiy, "A power consumption model for multi-rotor small unmanned aircraft systems," 2017 International Conference on Unmanned Aircraft Systems (ICUAS), Miami, FL, USA, 2017, pp. 310-315, doi: https://doi.org/10.1109/ICUAS.2017.7991310.
