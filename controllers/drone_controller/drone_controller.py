@@ -44,7 +44,7 @@ from controller import Motor
 
 import math
 from datetime import datetime
-from energy_model import *
+
 import os
 
 def SIGN(x):
@@ -147,6 +147,10 @@ file_path_energy = "energy_{}.csv".format(current_date.strftime('%Y%m%d'))
 file_path_energy = os.path.join(folder_name, file_path_energy)
 file_energy = open(file_path_energy, 'w')
 
+file_path_angle = f"angle_{current_date.strftime('%Y%m%d')}.csv"
+file_path_angle = os.path.join(folder_name, file_path_angle)
+file_angle = open(file_path_angle, 'w')
+
 
 time_step_iter = 0
 
@@ -232,32 +236,34 @@ while robot.step(timestep) != -1:
 
     """ drone energy consumption model part """
 
-    # get angle with integrate angular velocity
-    delta_time = time - before_time
-    angular_velocity = gyro.getValues()
-    delta_angle = [(a_vel - prev_a_vel)*delta_time for a_vel, prev_a_vel in zip(angular_velocity, before_angluar_velocity)]
-    total_angle = [angle + d_angle for angle, d_angle in zip(total_angle, delta_angle)]
+    # # get angle with integrate angular velocity
+    # delta_time = time - before_time
+    # angular_velocity = gyro.getValues()
+    # delta_angle = [(a_vel - prev_a_vel)*delta_time for a_vel, prev_a_vel in zip(angular_velocity, before_angluar_velocity)]
+    # total_angle = [angle + d_angle for angle, d_angle in zip(total_angle, delta_angle)]
+    # before_time = time
+    # before_angluar_velocity = angular_velocity
 
-    before_time = time
-    before_angluar_velocity = angular_velocity
+    # # get energy consumption
+    # V_air = math.sqrt(math.pow(gps.getSpeedVector()[0],2) + math.pow(gps.getSpeedVector()[1],2))
+    # V_vert = abs(gps.getSpeedVector()[2]) 
+    # alpha = total_angle[1]    # attack angle is y-axis
+    # T = thrust(alpha, V_air, m_payload)
 
-    V_air = math.sqrt(math.pow(gps.getSpeedVector()[0],2) + math.pow(gps.getSpeedVector()[1],2))
-    V_vert = abs(gps.getSpeedVector()[2]) 
-    alpha = total_angle[1]    # attack angle is y-axis
-    T = thrust(alpha, V_air, m_payload)
+    # power_induced = P_induced(T, V_vert)
+    # power_profile = P_profile(T, V_air, alpha)
+    # power_parasite = P_parasite(V_air)
+    # total_power = power_induced + power_profile + power_parasite
 
-    power_induced = P_induced(T, V_vert)
-    power_profile = P_profile(T, V_air, alpha)
-    power_parasite = P_parasite(V_air)
-    total_power = power_induced + power_profile + power_parasite
-
-    if time_step_iter % 20 == 0:
-        print(f"total energy consumption : {total_power} (J)")
-        print(f"> induced power : {power_induced} (J)")
-        print(f"> profile power : {power_profile} (J)")
-        print(f"> parasite power : {power_parasite} (J)")
-        file_energy.write(f"{round(time, 2)},{round(total_power, 5)},{round(power_induced, 5)},{round(power_profile, 5)},{round(power_parasite, 5)}\n")
-        # file_climb.write("{},{},{},{}\n".format(time, current_position[0], current_position[1], current_position[2]))
+    # if time_step_iter % 20 == 0:
+    #     # print(f"total energy consumption : {total_power} (J)")
+    #     # print(f"> induced power : {power_induced} (J)")
+    #     # print(f"> profile power : {power_profile} (J)")
+    #     # print(f"> parasite power : {power_parasite} (J)")
+    #     print(f"angle change: 0 {round(total_angle[0], 5)} 1 {round(total_angle[1], 5)} 2 {round(total_angle[2], 5)}")
+    #     print(f"angular velocity change: 0 {round(angular_velocity[0], 5)} 1 {round(angular_velocity[1], 5)} 2 {round(angular_velocity[2], 5)}")
+    #     file_energy.write(f"{round(time, 2)},{round(total_power, 5)},{round(power_induced, 5)},{round(power_profile, 5)},{round(power_parasite, 5)}\n")
+    #     file_angle.write(f"{round(time, 2)},{round(total_angle[0], 5)},{round(total_angle[1], 5)},{round(total_angle[2], 5)}\n")
 
 
     '''drone climb rate part'''
@@ -271,3 +277,4 @@ while robot.step(timestep) != -1:
 
 # file_climb.close()
 file_energy.close()
+file_angle.close()

@@ -7,6 +7,7 @@ from controller import Supervisor
 
 from map_generator import *
 from path_generator import *
+from energy_model import *
 
 
 # create the Robot instance.
@@ -73,22 +74,76 @@ print("... plotting grid ...")
 grid_plot(grid, xsize, ysize)
 
 print("... calculating path ...")
-paths, paths_smooth = a_star(grid, grid_size, start, dest)
-paths_theta, paths_smooth_theta = theta_star(grid, grid_size, start, dest)
-# paths_old = a_star_old(grid, grid_size, start, dest)
+paths, paths_smooth, p_e_sum, p_s_e_sum = a_star(grid, grid_size, start, dest)
+paths_theta, paths_smooth_theta, p_e_sum_theta, p_s_e_sum_theta = theta_star(grid, grid_size, start, dest)
 
+print("... calculating path with energy constraint ...")
+paths_e, paths_smooth_e, p_e_e_sum, p_s_e_e_sum = a_star(grid, grid_size, start, dest, True, True)
+paths_e_theta, paths_smooth_e_theta, p_e_e_sum_theta, p_s_e_e_sum_theta = theta_star(grid, grid_size, start, dest, True, True)
+
+print("... energy consumption estimate ...")
+print(f"> a-star : {p_e_sum} / a-star smooth {p_s_e_sum} / a-star energy {p_e_e_sum} / a-star energy smooth {p_s_e_e_sum}")
+print(f"> theta-star : {p_e_sum_theta} / theta-star smooth {p_s_e_sum_theta} / theta-star energy {p_e_e_sum_theta} / theta-star energy smooth {p_s_e_e_sum_theta}")
 
 print("... writing path ...")
 write_path(paths, "a_star")
-# write_path(paths_old, "old_a_star")
 write_path(paths_smooth, "smooth_a_star")
 write_path(paths_theta, "theta_star")
 write_path(paths_smooth_theta, "smooth_theta_star")
 
+print("... writing path with energy constraint ...")
+write_path(paths_e, "a_star_energy")
+write_path(paths_smooth_e, "a_star_energy_smooth")
+write_path(paths_e_theta, "theta_star_energy")
+write_path(paths_smooth_e_theta, "theta_star_energy_smooth")
 
 print("... plotting path on map matrix ...")
 plot_path(gen_map_matrix, paths, "a_star")
-# plot_path(gen_map_matrix, paths_old, "old_a_star")
 plot_path(gen_map_matrix, paths_smooth, "smooth_a_star")
 plot_path(gen_map_matrix, paths_theta, "theta_star")
 plot_path(gen_map_matrix, paths_smooth_theta, "smooth_theta_star")
+
+print("... writing path with energy constraints ...")
+plot_path(gen_map_matrix, paths_e, "a_star_energy")
+plot_path(gen_map_matrix, paths_smooth_e, "a_star_energy_smooth")
+plot_path(gen_map_matrix, paths_e_theta, "theta_star_energy")
+plot_path(gen_map_matrix, paths_smooth_e_theta, "theta_star_energy_smooth")
+
+
+time_step_iter = 0
+
+# used in energy consumption model
+before_time = supervisor.getTime()
+before_drone_translation = drone_translation_field.getSFVec3f()
+drone_rotation_field = drone.getField('rotation')
+m_payload = 0 
+
+adj_alpha = -0.008
+
+while supervisor.step(timestep) != -1:
+    time = supervisor.getTime()
+
+    """ drone energy consuption calculation """
+
+    drone_translation = drone_translation_field.getSFVec3f()
+    drone_rotation = drone_rotation_field.getSFVec3f()
+    drone_row_pitch_yaw = quatarnion_to_roll_pitch_yaw(drone_rotation)
+
+    alpha = -(drone_row_pitch_yaw[1] - adj_alpha)
+    time_delta = time - before_time
+    V_vert = -1 * ((drone_translation[2] - before_drone_translation[2]) / time_delta)
+    V_air = math.sqrt((drone_translation[0] - before_drone_translation[0])**2 + 
+                       (drone_translation[1] - before_drone_translation[1])**2) / time_delta
+    
+    T = thrust(alpha, V_air, m_payload)
+    P_i = P_induced(T, V_vert)
+    P_p = P_profile(T, V_air, alpha)
+    P_par = P_parasite(V_air)
+
+    if time_step_iter % 20 == 0:
+        print("translation:", drone_translation)
+        print("roll, pitch, yaw:", drone_row_pitch_yaw)
+        print(f"P_i {P_i} / P_p {P_p} / P_par {P_par}")
+
+
+    time_step_iter += 1

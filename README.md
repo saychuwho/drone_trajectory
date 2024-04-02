@@ -79,6 +79,12 @@ Energy model에서 사용된 상수들은 [A power consumption model for multi-r
 
 ![](/image/table3.png)
 
+에너지 모델은 shortest-path finding algorithm의 cost function에 사용된다. 구체적으로는 '각 점에서 목적지까지 소모되는 예상 에너지'를 `e_val`에 계산한 뒤, `a_star()`와 `theta_star()` 속 heap의 key 값으로 사용한다. 구체적인 cost function은 다음과 같다.
+
+$$F(p) = k_gG(p) + k_hH(p) + k_eE(p)$$
+
+$G(p)$는 `g_val`, $H(p)$는 `h_val`, $E(p)$는 `e_val`이다. $k_g, k_h, h_e$는 상수들로, 상수들은 실험적으로 조정되었다. 현재 상수값들은 확정되지 않았다.
+
 ### Drone Controller
 
 [drone_controller.py](/controllers/drone_controller/drone_controller.py)를 이용해 webots world에 있는 drone을 움직인다. 현재는 수동 조작밖에 안되지만, 추후 생성된 path를 따라가도록 controller를 만들 것이다.

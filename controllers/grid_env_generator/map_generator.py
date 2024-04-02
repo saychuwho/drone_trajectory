@@ -93,6 +93,8 @@ def start_dest_generate(o_matrix, x_size, y_size, z_size):
             continue
         else:
             break
+
+    print("> find start point")
     
     while True:
         end_x = random.randint(0, x_size-1)
@@ -107,6 +109,8 @@ def start_dest_generate(o_matrix, x_size, y_size, z_size):
             continue
         else:
             break
+
+    print("> find destination point")
     
     return (start_x, start_y, start_z), (end_x, end_y, end_z)
 
