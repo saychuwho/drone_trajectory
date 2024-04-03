@@ -6,6 +6,8 @@ import os
 import random
 import math
 
+from collections import deque
+
 
 # size_list must contain integer with even numberk
 def map_gen(x_size, y_size, z_size, obstacle_num, size_list):
@@ -84,22 +86,35 @@ def grid_gen(o_matrix, x_size, y_size, z_size):
 def start_dest_generate(o_matrix, x_size, y_size, z_size):
     # fix the start_z with 1 m
     start_x, start_y, start_z, end_x, end_y, end_z = 0, 0, 1, 0, 0, 0
-    
-    while True:
-        start_x = random.randint(0, x_size-1)
-        start_y = random.randint(0, y_size-1)
+
+    # make list with grid points
+    grid_points = []
+    grid_points_bottom = []
+    for x in range(0, x_size-1):
+        for y in range(0, y_size-1):
+            grid_points_bottom.append((x, y, 1))
+            for z in range(1, z_size-1):
+                grid_points.append((x, y, z))
+
+    random.shuffle(grid_points)
+    random.shuffle(grid_points_bottom)
+
+    grid_points = deque(grid_points)
+    grid_points_bottom = deque(grid_points_bottom)
+
+    while grid_points_bottom:
+        choice_point = grid_points_bottom.popleft()
+
+        start_x, start_y, _ = choice_point
 
         if o_matrix[start_x][start_y] > 0:
             continue
         else:
             break
 
-    print("> find start point")
-    
-    while True:
-        end_x = random.randint(0, x_size-1)
-        end_y = random.randint(0, y_size-1)
-        end_z = random.randint(1, z_size-1)
+    while grid_points:
+        choice_point = grid_points.popleft()
+        end_x, end_y, end_z = choice_point
 
         if start_x == end_x and start_y == end_y and start_z == end_z:
             continue
@@ -110,10 +125,12 @@ def start_dest_generate(o_matrix, x_size, y_size, z_size):
         else:
             break
 
-    print("> find destination point")
-    
-    return (start_x, start_y, start_z), (end_x, end_y, end_z)
-
+    if grid_points:
+        print("> successed to find start, destination point")
+        return (start_x, start_y, start_z), (end_x, end_y, end_z)
+    else:
+        print("> failed to find start, destination point")
+        return (-1,-1,-1), (-1,-1,-1)
 
 def grid_translation(point, is_reverse=True):
     tan_gamma = 1.75

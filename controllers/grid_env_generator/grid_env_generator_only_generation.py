@@ -22,10 +22,6 @@ gen_map = map_gen(xsize, ysize, zsize, obstacle_num, size_list)
 print("... generating map matrix, occupancy matrix ...")
 gen_map_matrix, gen_occupancy_matrix = matrix_gen(gen_map, xsize, ysize)
 
-print("... generating start, dest ...")
-start, dest = start_dest_generate(gen_occupancy_matrix, xsize, ysize, zsize)
-print(f"> start {start} \n> dest {dest}")
-
 print("... generating grid ...")
 grid = grid_gen(gen_occupancy_matrix, xsize, ysize, zsize)
 
@@ -37,6 +33,13 @@ matrix_plot(gen_occupancy_matrix, "occupancy")
 
 print("... plotting grid ...")
 grid_plot(grid, xsize, ysize)
+
+print("... generating start, dest ...")
+start, dest = start_dest_generate(gen_occupancy_matrix, xsize, ysize, zsize)
+print(f"> start {start} \n> dest {dest}")
+
+if start[0] == -1 or dest[0] == -1:
+    exit()
 
 print("... calculating path ...")
 paths, paths_smooth, p_e_sum, p_s_e_sum = a_star(grid, grid_size, start, dest, False)

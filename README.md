@@ -85,6 +85,8 @@ $$F(p) = k_gG(p) + k_hH(p) + k_eE(p)$$
 
 $G(p)$는 `g_val`, $H(p)$는 `h_val`, $E(p)$는 `e_val`이다. $k_g, k_h, h_e$는 상수들로, 상수들은 실험적으로 조정되었다. 현재 상수값들은 확정되지 않았다.
 
+상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 살펴보면서 상수 값을 정하고 있다.
+
 ### Drone Controller
 
 [drone_controller.py](/controllers/drone_controller/drone_controller.py)를 이용해 webots world에 있는 drone을 움직인다. 현재는 수동 조작밖에 안되지만, 추후 생성된 path를 따라가도록 controller를 만들 것이다.

@@ -34,7 +34,7 @@ dz = [-1, 0, 1]
 
 
 # define constant of cost function
-K_E = 5    # Energy constant 
+K_E = 1     # Energy constant 
 K_H = 100   # H-value constant
 K_G = 100   # G-value constant
 
@@ -91,7 +91,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     path_found = False
     while open_heap:
         v_val, v = heapq.heappop(open_heap)
-        if not is_controller: print(f"## pop {v} with {v_val}")
+        # if not is_controller: print(f"## pop {v} with {v_val}")
         row, col, layer = v
 
         if v == dest:
@@ -115,7 +115,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     paths_smooth = []      
     if path_found == False:
         print("> no path found")
-        return paths, paths_smooth
+        return paths, paths_smooth, 0, 0
     
     path_parent = dest
     paths.append(dest)
@@ -140,7 +140,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
 
 
 def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
-    if not is_controller: print("# generating path with a_star")
+    if not is_controller: print("# generating path with theta_star")
 
     is_print = False if is_controller else True
 
@@ -191,7 +191,7 @@ def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=Fal
     path_found = False
     while open_heap:
         v_val, v = heapq.heappop(open_heap)
-        if not is_controller: print(f"## pop {v} with {v_val}")
+        # if not is_controller: print(f"## pop {v} with {v_val}")
         row, col, layer = v
 
         if v == dest:
@@ -215,7 +215,7 @@ def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=Fal
     paths_smooth = []      
     if path_found == False:
         print("> no path found")
-        return paths, paths_smooth
+        return paths, paths_smooth, 0, 0
     
     path_parent = dest
     paths.append(dest)
