@@ -34,12 +34,12 @@ dz = [-1, 0, 1]
 
 
 # define constant of cost function
-K_E = 1     # Energy constant 
-K_H = 100   # H-value constant
-K_G = 100   # G-value constant
+K_E = 4   # Energy constant 
+K_H = 1000   # H-value constant
+K_G = 1000   # G-value constant
 
 
-def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
+def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False, k_const=None):
     if not is_controller: print("# generating path with a_star")
 
     is_print = False if is_controller else True
@@ -49,6 +49,11 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     global dz
 
     x_size, y_size, z_size = grid_size
+
+    if k_const != None:
+        k_g, k_h, k_e = k_const
+    else:
+        k_g, k_h, k_e = K_G, K_H, K_E
 
     tan_gamma = 1.75
     x_delta = 1.0
@@ -81,11 +86,11 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     row, col, layer = start
     g_val[layer][row][col] = 0
     if energy_path:
-        heapq.heappush(open_heap, (K_G*g_val[layer][row][col]
-                    + K_H*h_val[layer][row][col] + K_E*e_val[layer][row][col], start))
+        heapq.heappush(open_heap, (k_g*g_val[layer][row][col]
+                    + k_h*h_val[layer][row][col] + k_e*e_val[layer][row][col], start))
     else:
-        heapq.heappush(open_heap, (K_G*g_val[layer][row][col]
-                    + K_H*h_val[layer][row][col], start))
+        heapq.heappush(open_heap, (k_g*g_val[layer][row][col]
+                    + k_h*h_val[layer][row][col], start))
 
 
     path_found = False
@@ -107,7 +112,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
                 s_prime = (adjx, adjy, adjz)
 
                 if __is_valid(grid, valid_grid_size, closed, s_prime, is_print):
-                    __update_vertex_a_star(open_heap, v, s_prime, parent, g_val, h_val, energy_path, e_val)
+                    __update_vertex_a_star(open_heap, v, s_prime, parent, g_val, h_val, energy_path, e_val, k_const)
 
 
     # consturcting path
@@ -139,7 +144,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
     return paths, paths_smooth, paths_energy_sum, paths_smooth_energy_sum
 
 
-def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=False):
+def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=False, k_const=None):
     if not is_controller: print("# generating path with theta_star")
 
     is_print = False if is_controller else True
@@ -149,6 +154,11 @@ def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=Fal
     global dz
 
     x_size, y_size, z_size = grid_size
+
+    if k_const != None:
+        k_g, k_h, k_e = k_const
+    else:
+        k_g, k_h, k_e = K_G, K_H, K_E
 
     tan_gamma = 1.75
     x_delta = 1.0
@@ -182,11 +192,11 @@ def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=Fal
     row, col, layer = start
     g_val[layer][row][col] = 0
     if energy_path:
-        heapq.heappush(open_heap, (K_G*g_val[layer][row][col]
-                    + K_H*h_val[layer][row][col] + K_E*e_val[layer][row][col], start))
+        heapq.heappush(open_heap, (k_g*g_val[layer][row][col]
+                    + k_h*h_val[layer][row][col] + k_e*e_val[layer][row][col], start))
     else:
-        heapq.heappush(open_heap, (K_G*g_val[layer][row][col]
-                    + K_H*h_val[layer][row][col], start))
+        heapq.heappush(open_heap, (k_g*g_val[layer][row][col]
+                    + k_h*h_val[layer][row][col], start))
     
     path_found = False
     while open_heap:
@@ -207,7 +217,7 @@ def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=Fal
                 s_prime = (adjx, adjy, adjz)
 
                 if __is_valid(grid, valid_grid_size, closed, s_prime, is_print):
-                    __update_vertex_theta_star(open_heap, v, s_prime, parent, g_val, h_val, grid, valid_grid_size, energy_path, e_val)
+                    __update_vertex_theta_star(open_heap, v, s_prime, parent, g_val, h_val, grid, valid_grid_size, energy_path, e_val, k_const)
 
 
     # consturcting path
@@ -289,7 +299,7 @@ def __is_valid(grid, grid_size, closed, s, is_print=True):
     return True
 
 
-def __update_vertex_a_star(open_heap: list, v, s_prime, parent: list, g_val, h_val, energy_path=False, e_val=None):
+def __update_vertex_a_star(open_heap: list, v, s_prime, parent: list, g_val, h_val, energy_path=False, e_val=None, k_const=None):
     row, col, layer = v
     s_prime_row, s_prime_col, s_prime_layer = s_prime
     
@@ -299,35 +309,74 @@ def __update_vertex_a_star(open_heap: list, v, s_prime, parent: list, g_val, h_v
 
     e_val_prime = e_val[s_prime_layer][s_prime_row][s_prime_col]
 
+    if k_const != None:
+        k_g, k_h, k_e = k_const
+    else:
+        k_g, k_h, k_e = K_G, K_H, K_E
+
     # __get_euclidean_distance(v, s_prime)
 
-    if (g_val_v + __get_euclidean_distance(v, s_prime) < before_g_val_prime):
-        g_val[s_prime_layer][s_prime_row][s_prime_col] = g_val_v + __get_euclidean_distance(v, s_prime)
+    # """ proposed algorithm 1 """
 
-        parent[s_prime] = v
+    # if (g_val_v + __get_euclidean_distance(v, s_prime) < before_g_val_prime):
+    #     g_val[s_prime_layer][s_prime_row][s_prime_col] = g_val_v + __get_euclidean_distance(v, s_prime)
+
+    #     parent[s_prime] = v
         
-        if (before_g_val_prime + h_val_prime, s_prime) in open_heap:
-            open_heap.remove((K_G*before_g_val_prime + K_H*h_val_prime, s_prime))
-            heapq.heapify(open_heap)
-        
-        if not energy_path:
-            heapq.heappush(open_heap, (K_G*g_val[s_prime_layer][s_prime_row][s_prime_col]+
-                                    K_H*h_val_prime, s_prime))
+    #     if not energy_path:
+    #         if (k_g*before_g_val_prime + k_h*h_val_prime, s_prime) in open_heap:
+    #             open_heap.remove((k_g*before_g_val_prime + k_h*h_val_prime, s_prime))
+    #             heapq.heapify(open_heap)
+            
+    #         heapq.heappush(open_heap, (k_g*g_val[s_prime_layer][s_prime_row][s_prime_col]+
+    #                                 k_h*h_val_prime, s_prime))
 
-        else:
-            heapq.heappush(open_heap, (K_G*g_val[s_prime_layer][s_prime_row][s_prime_col]+
-                                        K_H*h_val_prime + 
-                                        K_E*e_val_prime
-                                        , s_prime))
+    #     else:
+    #         if (k_g*before_g_val_prime + k_h*h_val_prime + k_e*e_val_prime, s_prime) in open_heap:
+    #             open_heap.remove((k_g*before_g_val_prime + k_h*h_val_prime + k_e*e_val_prime, s_prime))
+    #             heapq.heapify(open_heap)
+
+    #         heapq.heappush(open_heap, (k_g*g_val[s_prime_layer][s_prime_row][s_prime_col]+
+    #                                     k_h*h_val_prime + 
+    #                                     k_e*e_val_prime
+    #                                     , s_prime))
+
+    """ proposed algorithm 2 """      
+
+    if energy_path:
+        if (g_val_v + __get_euclidean_distance(v, s_prime) < before_g_val_prime):
+            g_val[s_prime_layer][s_prime_row][s_prime_col] = g_val_v + __get_euclidean_distance(v, s_prime)
+            parent[s_prime] = v
+            
+            if (k_g*before_g_val_prime + k_h*h_val_prime, s_prime) in open_heap:
+                open_heap.remove((k_g*before_g_val_prime + k_h*h_val_prime, s_prime))
+                heapq.heapify(open_heap)
+            
+            heapq.heappush(open_heap, (k_g*g_val[s_prime_layer][s_prime_row][s_prime_col]+
+                                    k_h*h_val_prime, s_prime))
+    else:        
+        if (g_val_v + k_g*__get_euclidean_distance(v, s_prime) + k_e*__get_energy_consumption(v, s_prime) < before_g_val_prime):
+            g_val[s_prime_layer][s_prime_row][s_prime_col] = g_val_v + k_g*__get_euclidean_distance(v, s_prime) + k_e*__get_energy_consumption(v, s_prime)
+
+            parent[s_prime] = v
+            
+            if (before_g_val_prime + k_h*h_val_prime, s_prime) in open_heap:
+                open_heap.remove((before_g_val_prime + k_h*h_val_prime, s_prime))
+                heapq.heapify(open_heap)
+            
+            heapq.heappush(open_heap, (g_val[s_prime_layer][s_prime_row][s_prime_col]+
+                                    k_h*h_val_prime, s_prime))
 
 
-def __update_vertex_theta_star(open_heap: list, v, s_prime, parent: list, g_val, h_val, grid, grid_size, energy_path=False, e_val=None):
+
+
+def __update_vertex_theta_star(open_heap: list, v, s_prime, parent: list, g_val, h_val, grid, grid_size, energy_path=False, e_val=None, k_const=None):
     # path 2 : replace v with parent[v]
     if __lines_sight_partial_3D(grid, grid_size, parent[v], s_prime):
-        __update_vertex_a_star(open_heap, parent[v], s_prime, parent, g_val, h_val, energy_path, e_val)
+        __update_vertex_a_star(open_heap, parent[v], s_prime, parent, g_val, h_val, energy_path, e_val, k_const)
     # path 1. same as update_vertex_a_star()
     else:
-        __update_vertex_a_star(open_heap, v, s_prime, parent, g_val, h_val, energy_path, e_val)
+        __update_vertex_a_star(open_heap, v, s_prime, parent, g_val, h_val, energy_path, e_val, k_const)
 
 
 def __lines_sight_partial_3D(grid, grid_size, s_parent, s_prime) -> bool:

@@ -15,6 +15,9 @@ This project generates energy-efficient drone path based on [webots](https://cyb
     - [Environment representation](#environment-representation)
     - [shortest-path finding algorithms](#shortest-path-finding-algorithms)
     - [Energy Model for Drone](#energy-model-for-drone)
+      - [Proposed cost function 1](#proposed-cost-function-1)
+      - [Proposed cost function 2](#proposed-cost-function-2)
+    - [Shortest path algorithm with energy model](#shortest-path-algorithm-with-energy-model)
     - [Drone Controller](#drone-controller)
   - [References](#references)
 
@@ -79,13 +82,39 @@ Energy model에서 사용된 상수들은 [A power consumption model for multi-r
 
 ![](/image/table3.png)
 
+#### Proposed cost function 1
+
 에너지 모델은 shortest-path finding algorithm의 cost function에 사용된다. 구체적으로는 '각 점에서 목적지까지 소모되는 예상 에너지'를 `e_val`에 계산한 뒤, `a_star()`와 `theta_star()` 속 heap의 key 값으로 사용한다. 구체적인 cost function은 다음과 같다.
 
 $$F(p) = k_gG(p) + k_hH(p) + k_eE(p)$$
 
 $G(p)$는 `g_val`, $H(p)$는 `h_val`, $E(p)$는 `e_val`이다. $k_g, k_h, h_e$는 상수들로, 상수들은 실험적으로 조정되었다. 현재 상수값들은 확정되지 않았다.
 
-상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 살펴보면서 상수 값을 정하고 있다.
+상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 살펴보면서 상수 값을 정해보았지만, 좋은 결과를 찾을 수 없었다.
+
+#### Proposed cost function 2
+
+이전에 제안된 알고리즘을 수정해 새로운 알고리즘을 고안했다. 새로운 알고리즘의 cost function은 다음과 같다.
+
+$$F(p) = G(p) + k_hH(p)$$
+
+여기서는 $G(p)$를 업데이트 할 때 식을 다음과 같이 변경했다.
+
+$$G(p) \larr \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
+
+여기서 ${distance}(s,v)$는 현재 지점에서 update할 다음 지점 사이의 거리이고, ${energy}(s,v)$는 현재 지점에서 update할 다음 지점 사이의 예상 에너지 소비량이다. 
+
+상수값 $k_g, k_h, k_e$는 현재 시뮬레이션 데이터를 통해 조정 중이다.
+
+### Shortest path algorithm with energy model
+
+아래 사진 중 첫 번째 사진은 에너지 모델을 적용하지 않았을 때 Theta* algorithm으로 생성된 path이고, 두 번째 사진은 에너지 모델을 적용했을 때 Theta* algorithm으로 생성된 path이다. 
+
+![](/image/plot_path_20240403_smooth_theta_star.png)
+
+![](/image/plot_path_20240403_theta_star_energy_smooth.png)
+
+비교해보면 energy model을 적용한 경우에는 고도의 상승을 피하는 경로를 찾아 가는 것을 알 수 있다.
 
 ### Drone Controller
 
