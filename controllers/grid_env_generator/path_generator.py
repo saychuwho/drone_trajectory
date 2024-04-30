@@ -40,7 +40,7 @@ K_G = 1000   # G-value constant
 
 
 def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False, k_const=None):
-    if not is_controller: print("# generating path with a_star")
+    #if not is_controller: print("# generating path with a_star")
 
     is_print = False if is_controller else True
 
@@ -145,7 +145,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False, 
 
 
 def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=False, k_const=None):
-    if not is_controller: print("# generating path with theta_star")
+    #if not is_controller: print("# generating path with theta_star")
 
     is_print = False if is_controller else True
 

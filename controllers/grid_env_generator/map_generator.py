@@ -126,7 +126,7 @@ def start_dest_generate(o_matrix, x_size, y_size, z_size):
             break
 
     if grid_points:
-        print("> successed to find start, destination point")
+        #print("> successed to find start, destination point")
         return (start_x, start_y, start_z), (end_x, end_y, end_z)
     else:
         print("> failed to find start, destination point")

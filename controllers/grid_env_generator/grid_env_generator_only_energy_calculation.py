@@ -94,10 +94,11 @@ def energy_calculation(k_const=None):
 
     return (avg_a_star, avg_a_star_smooth, avg_theta_star, avg_theta_star_smooth, med_a_star, med_a_star_smooth, med_theta_star, med_theta_star_smooth)
 
-def save_csv(data, name=""):
+
+def save_csv(data, name="", k_e=""):
     current_date = datetime.now()
     filename2 = current_date.strftime('%Y%m%d') + f"_{name}.csv"
-    folder_name = "data_3_" + current_date.strftime('%Y%m%d')
+    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
     filename2 = os.path.join(folder_name, filename2)
@@ -105,11 +106,11 @@ def save_csv(data, name=""):
     np.savetxt(filename2, data, delimiter=',')
 
 
-def plot_data(data, name=""):
+def plot_data(data, name="", k_e=""):
     plt.clf()
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_{name}.png"
-    folder_name = "data_3_" + current_date.strftime('%Y%m%d')
+    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
     filename = os.path.join(folder_name, filename)
@@ -139,72 +140,66 @@ def plot_data(data, name=""):
 
 """ make datas and plotting here """
 
-avg_a_star = np.zeros((10,10))
-avg_a_star_smooth = np.zeros((10,10))
-avg_theta_star = np.zeros((10,10))
-avg_theta_star_smooth = np.zeros((10,10))
-
-med_a_star = np.zeros((10,10))
-med_a_star_smooth = np.zeros((10,10))
-med_theta_star = np.zeros((10,10))
-med_theta_star_smooth = np.zeros((10,10))
-
-"""
-for k_e in range(1, 101, 10):
-    for k_g in range(10, 1001, 10):
-        for k_h in range(10, 1001, 10):
-            k_constant = (k_g, k_h, k_e)
-            
-            result = energy_calculation(k_constant)
-            avg_a_star[k_g][k_h] = result[0]
-            avg_a_star_smooth[k_g][k_h] = result[1]
-            avg_theta_star[k_g][k_h] = result[2]
-            avg_theta_star_smooth[k_g][k_h] = result[3]
-
-            med_a_star[k_g][k_h] = result[4]
-            med_a_star_smooth[k_g][k_h] = result[5]
-            med_theta_star[k_g][k_h] = result[6]
-            med_theta_star_smooth[k_g][k_h] = result[7]
-"""
-
+INF_MINUS = -100000000000
 
 # test code
-for k_g in range(100, 1001, 100):
-    for k_h in range(100, 1001, 100):
-        k_constant = (k_g, k_h, 4)
+for k_e in range(1, 10):
+    current_date = datetime.now()
+    filename = current_date.strftime('%Y%m%d') + f"_max.txt"
+    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    filename = os.path.join(folder_name, filename)
 
-        # os.system('cls')
-        os.system('clear')
-        print(f"## k_g : {k_g} k_h : {k_h} k_e : {4}")
-        
-        result = energy_calculation(k_constant)
-        avg_a_star[k_g//100-1][k_h//100-1] = result[0]
-        avg_a_star_smooth[k_g//100-1][k_h//100-1] = result[1]
-        avg_theta_star[k_g//100-1][k_h//100-1] = result[2]
-        avg_theta_star_smooth[k_g//100-1][k_h//100-1] = result[3]
+    f = open(filename, 'w')
 
-        med_a_star[k_g//100-1][k_h//100-1] = result[4]
-        med_a_star_smooth[k_g//100-1][k_h//100-1] = result[5]
-        med_theta_star[k_g//100-1][k_h//100-1] = result[6]
-        med_theta_star_smooth[k_g//100-1][k_h//100-1] = result[7]
+    avg_a_star = np.zeros((10,10))
+    avg_a_star_smooth = np.zeros((10,10))
+    avg_theta_star = np.zeros((10,10))
+    avg_theta_star_smooth = np.zeros((10,10))
 
-save_csv(avg_a_star, "avg_a_star_4")
-save_csv(avg_a_star_smooth, "avg_a_star_smooth_4")
-save_csv(avg_theta_star, "avg_theta_star_4")
-save_csv(avg_theta_star_smooth, "avg_theta_star_smooth_4")
-save_csv(med_a_star, "med_a_star_4")
-save_csv(med_a_star_smooth, "med_a_star_smooth_4")
-save_csv(med_theta_star, "med_theta_star_4")
-save_csv(med_theta_star_smooth, "med_theta_star_smooth_4")
+    max_and_constant = [[INF_MINUS,0,0], [INF_MINUS,0,0], [INF_MINUS,0,0], [INF_MINUS,0,0]]
 
-plot_data(avg_a_star, "avg_a_star_4")
-plot_data(avg_a_star_smooth, "avg_a_star_smooth_4")
-plot_data(avg_theta_star, "avg_theta_star_4")
-plot_data(avg_theta_star_smooth, "avg_theta_star_smooth_4")
-plot_data(med_a_star, "med_a_star_4")
-plot_data(med_a_star_smooth, "med_a_star_smooth_4")
-plot_data(med_theta_star, "med_theta_star_4")
-plot_data(med_theta_star_smooth, "med_theta_star_smooth_4")
+    for k_g in range(100, 1001, 100):
+        for k_h in range(100, 1001, 100):
+            k_constant = (k_g, k_h, k_e)
+
+            # os.system('cls')
+            os.system('clear')
+            print(f"## k_g : {k_g} k_h : {k_h} k_e : {k_e}")
+            
+            result = energy_calculation(k_constant)
+
+            avg_a_star[k_g//100-1][k_h//100-1] = result[0]
+            avg_a_star_smooth[k_g//100-1][k_h//100-1] = result[1]
+            avg_theta_star[k_g//100-1][k_h//100-1] = result[2]
+            avg_theta_star_smooth[k_g//100-1][k_h//100-1] = result[3]
+
+            for i in range(4):
+                #print(f">>> {max_and_constant[i][0]}")
+                if result[i] > max_and_constant[i][0]:
+                    max_and_constant[i][0] = result[i]
+                    max_and_constant[i][1] = k_g
+                    max_and_constant[i][2] = k_h
+
+
+
+    save_csv(avg_a_star, "avg_a_star", str(k_e))
+    save_csv(avg_a_star_smooth, "avg_a_star_smooth", str(k_e))
+    save_csv(avg_theta_star, "avg_theta_star", str(k_e))
+    save_csv(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e))
+
+    plot_data(avg_a_star, "avg_a_star", str(k_e))
+    plot_data(avg_a_star_smooth, "avg_a_star_smooth", str(k_e))
+    plot_data(avg_theta_star, "avg_theta_star", str(k_e))
+    plot_data(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e))
+
+
+    result_str = ["a_star", "a_star_smooth", "theta_star", "theta_star_smooth"]
+    for i, result_val in max_and_constant:
+        f.write(f"{result_str[i]} | energy value : {result_val[0]} | k_g : {result_val[1]} | k_h : {result_val[2]} | k_e : {k_e} ")
+
+    f.close()
 
 
 
