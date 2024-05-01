@@ -119,7 +119,7 @@ def a_star(grid, grid_size, start, dest, is_controller=True, energy_path=False, 
     paths = []
     paths_smooth = []      
     if path_found == False:
-        print("> no path found")
+        # print("> no path found")
         return paths, paths_smooth, 0, 0
     
     path_parent = dest
@@ -224,7 +224,7 @@ def theta_star(grid, grid_size, start, dest, is_controller=True, energy_path=Fal
     paths = []
     paths_smooth = []      
     if path_found == False:
-        print("> no path found")
+        # print("> no path found")
         return paths, paths_smooth, 0, 0
     
     path_parent = dest

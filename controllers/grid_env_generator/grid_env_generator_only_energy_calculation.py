@@ -9,6 +9,8 @@ import os
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
 
+from multiprocessing import Process
+
 # map generation
 xsize = 40
 ysize = 40
@@ -20,7 +22,7 @@ obstacle_num = 30
 size_list = [2,4,6]
 
 def energy_calculation(k_const=None):
-    print("##### energy consumption calculation #####")
+    # print("##### energy consumption calculation #####")
 
     a_star_delta = []
     a_star_smooth_delta = []
@@ -28,7 +30,7 @@ def energy_calculation(k_const=None):
     theta_star_smooth_delta = []
 
     for i in range(100):
-        print(f"\n$$$ iter : {i}")
+        # print(f"$$$ iter : {i}")
         
         #print("... generating random map ...")
         gen_map = map_gen(xsize, ysize, zsize, obstacle_num, size_list)
@@ -80,17 +82,17 @@ def energy_calculation(k_const=None):
     med_theta_star = round(theta_star_delta[len(theta_star_delta)//2],2)
     med_theta_star_smooth = round(theta_star_smooth_delta[len(theta_star_smooth_delta)//2],2)
 
-    print("\n\naverage:")
-    print(f"\ta_star : {avg_a_star}")
-    print(f"\ta_star_smooth : {avg_a_star_smooth}")
-    print(f"\ttheta_star : {avg_theta_star}")
-    print(f"\ttheta_star_smooth : {avg_theta_star_smooth}")
+    # print("\n\naverage:")
+    # print(f"\ta_star : {avg_a_star}")
+    # print(f"\ta_star_smooth : {avg_a_star_smooth}")
+    # print(f"\ttheta_star : {avg_theta_star}")
+    # print(f"\ttheta_star_smooth : {avg_theta_star_smooth}")
 
-    print("\nmedian:")
-    print(f"\ta_star : {med_a_star}")
-    print(f"\ta_star_smooth : {med_a_star_smooth}")
-    print(f"\ttheta_star : {med_theta_star}")
-    print(f"\ttheta_star_smooth : {med_theta_star_smooth}")
+    # print("\nmedian:")
+    # print(f"\ta_star : {med_a_star}")
+    # print(f"\ta_star_smooth : {med_a_star_smooth}")
+    # print(f"\ttheta_star : {med_theta_star}")
+    # print(f"\ttheta_star_smooth : {med_theta_star_smooth}")
 
     return (avg_a_star, avg_a_star_smooth, avg_theta_star, avg_theta_star_smooth, med_a_star, med_a_star_smooth, med_theta_star, med_theta_star_smooth)
 
@@ -139,11 +141,10 @@ def plot_data(data, name="", k_e=""):
 
 
 """ make datas and plotting here """
-
 INF_MINUS = -100000000000
 
-# test code
-for k_e in range(1, 10):
+def run(k_e):
+    # test code
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_max.txt"
     folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
@@ -165,7 +166,7 @@ for k_e in range(1, 10):
             k_constant = (k_g, k_h, k_e)
 
             # os.system('cls')
-            os.system('clear')
+            # os.system('clear')
             print(f"## k_g : {k_g} k_h : {k_h} k_e : {k_e}")
             
             result = energy_calculation(k_constant)
@@ -196,12 +197,23 @@ for k_e in range(1, 10):
 
 
     result_str = ["a_star", "a_star_smooth", "theta_star", "theta_star_smooth"]
-    for i, result_val in max_and_constant:
-        f.write(f"{result_str[i]} | energy value : {result_val[0]} | k_g : {result_val[1]} | k_h : {result_val[2]} | k_e : {k_e} ")
+    for i, result_val in enumerate(max_and_constant):
+        f.write(f"{result_str[i]} | energy value : {result_val[0]} | k_g : {result_val[1]} | k_h : {result_val[2]} | k_e : {k_e}\n")
 
     f.close()
 
 
+""" use multiprocessing technique """
+procs = []
+for i in range(11, 21):
+    print(f"Process {i} starts")
+    p = Process(target=run, args=(i, ))
+    p.start()
+    procs.append(p)
+
+for i, p in enumerate(procs):
+    p.join()
+    print(f"Process {i} joins")
 
 
 # result = []
