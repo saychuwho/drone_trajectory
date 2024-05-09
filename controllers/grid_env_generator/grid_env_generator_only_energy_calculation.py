@@ -99,13 +99,17 @@ def energy_calculation(k_const=None):
 
 def save_csv(data, name="", k_e=""):
     current_date = datetime.now()
-    filename2 = current_date.strftime('%Y%m%d') + f"_{name}.csv"
+    filename = current_date.strftime('%Y%m%d') + f"_{name}.csv"
     folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
+    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    if not os.path.exists(folder_name_2):
+        os.makedirs(folder_name_2)
+    folder_name = os.path.join(folder_name_2, folder_name)
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
-    filename2 = os.path.join(folder_name, filename2)
+    filename = os.path.join(folder_name, filename)
 
-    np.savetxt(filename2, data, delimiter=',')
+    np.savetxt(filename, data, delimiter=',')
 
 
 def plot_data(data, name="", k_e=""):
@@ -113,9 +117,14 @@ def plot_data(data, name="", k_e=""):
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_{name}.png"
     folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
+    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    if not os.path.exists(folder_name_2):
+        os.makedirs(folder_name_2)
+    folder_name = os.path.join(folder_name_2, folder_name)
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
     filename = os.path.join(folder_name, filename)
+
 
     """ code from ChatGPT """
     # Create meshgrid for x, y coordinates
@@ -148,6 +157,10 @@ def run(k_e):
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_max.txt"
     folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
+    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    if not os.path.exists(folder_name_2):
+        os.makedirs(folder_name_2)
+    folder_name = os.path.join(folder_name_2, folder_name)
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
     filename = os.path.join(folder_name, filename)
@@ -205,13 +218,13 @@ def run(k_e):
 
 """ use multiprocessing technique """
 procs = []
-for i in range(11, 21):
+for i in range(1, 1001):
     print(f"Process {i} starts")
     p = Process(target=run, args=(i, ))
     p.start()
-    procs.append(p)
+    procs.append((p, i))
 
-for i, p in enumerate(procs):
+for p, i in procs:
     p.join()
     print(f"Process {i} joins")
 
