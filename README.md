@@ -1,6 +1,6 @@
 # drone_trajectory
 
-![img1](/image/thumbnail.png)
+<img src="./image/thumbnail.png" width="70%">
 
 [webots](https://cyberbotics.com/)를 이용해 에너지 효율적인 drone의 경로를 생성하는 프로젝트이다. shortest-path finding algorithm 중 A* algorithm과 Theta* algorithm을 사용해서 제작되었다.
 
@@ -46,9 +46,9 @@ map은 x, y 각각 40의 너비를 가지고 있고, 높이는 10이다. 또한,
 
 다음은 각각 생성된 map, occupancy matrix의 예시이다.
 
-![map](/image/plot_20240308_map.png)
+<img src="./image/plot_20240308_map.png" width="50%">
 
-![occupancy matrix](/image/plot_20240308_occupancy.png)
+<img src="./image/plot_20240308_occupancy.png" width="50%">
 
 ### shortest-path finding algorithms
 
@@ -66,7 +66,7 @@ A* algorithm과 Theta* algorithm이 [path_generator.py](/controllers/grid_env_ge
 
 만들어진 path의 예시는 다음과 같다. 아래 path는 post-smoothing 과정을 거친 theta* path이다.
 
-![theta path](/image/plot_path_20240308_smooth_theta_star.png)
+<img src="./image/plot_path_20240308_smooth_theta_star.png" width="50%">
 
 다른 예시들은 여기서 확인할 수 있다. [A* path](/image/plot_path_20240308_a_star.png) / [A* path with post-smoothing](/image/plot_path_20240308_smooth_a_star.png) / [theta* path](/image/plot_path_20240308_theta_star.png)
 
@@ -76,11 +76,11 @@ A* algorithm과 Theta* algorithm이 [path_generator.py](/controllers/grid_env_ge
 
 Drone의 energy model은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)의 equation (14)와 equation (15)를 참고해 만들어졌다.
 
-![](/image/table1_eq_14_eq_15.png)
+<img src="./image/table1_eq_14_eq_15.png" width="50%">
 
 Energy model에서 사용된 상수들은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)의 TABLE 1에 구하는 방법이 나와있지만, 이번 프로젝트에서는 TABLE 3의 상수들을 사용했다. 이는 energy model에 사용되는 다양한 상수들이 실험적으로 측정되어야 하지만, 현실 세계의 드론을 현재 가지고 있지는 않기 때문에 상수들을 구할 수 없었기 때문이다.
 
-![](/image/table3.png)
+<img src="./image/table3.png" width="50%">
 
 #### Proposed cost function 1
 
@@ -90,7 +90,7 @@ $$F(p) = k_gG(p) + k_hH(p) + k_eE(p)$$
 
 $G(p)$는 `g_val`, $H(p)$는 `h_val`, $E(p)$는 `e_val`이다. $k_g, k_h, h_e$는 상수들로, 상수들은 실험적으로 조정되었다. 현재 상수값들은 확정되지 않았다.
 
-상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 살펴보면서 상수 값을 정해보았지만, 좋은 결과를 찾을 수 없었다.
+상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 구해보았지만, 최적의 상수값을 찾을 수 없었다.
 
 #### Proposed cost function 2
 
@@ -110,9 +110,10 @@ $$G(p) \larr \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
 
 아래 사진 중 첫 번째 사진은 에너지 모델을 적용하지 않았을 때 Theta* algorithm으로 생성된 path이고, 두 번째 사진은 에너지 모델을 적용했을 때 Theta* algorithm으로 생성된 path이다. 
 
-![](/image/plot_path_20240403_smooth_theta_star.png)
 
-![](/image/plot_path_20240403_theta_star_energy_smooth.png)
+<img src="./image/plot_path_20240403_smooth_theta_star.png" width="50%">
+
+<img src="./image/plot_path_20240403_theta_star_energy_smooth.png" width="50%">
 
 비교해보면 energy model을 적용한 경우에는 고도의 상승을 피하는 경로를 찾아 가는 것을 알 수 있다.
 
