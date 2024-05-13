@@ -105,11 +105,11 @@ def energy_calculation(k_const=None, o_num=None):
     return (avg_a_star, avg_a_star_smooth, avg_theta_star, avg_theta_star_smooth, med_a_star, med_a_star_smooth, med_theta_star, med_theta_star_smooth)
 
 
-def save_csv(data, name="", k_e=""):
+def save_csv(data, name="", k_e="", obstacle=""):
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_{name}.csv"
-    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
-    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = f"data_{k_e}_{obstacle}" + current_date.strftime('%Y%m%d')
+    folder_name_2 = f"data_{obstacle}" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name_2):
         os.makedirs(folder_name_2)
     folder_name = os.path.join(folder_name_2, folder_name)
@@ -120,12 +120,12 @@ def save_csv(data, name="", k_e=""):
     np.savetxt(filename, data, delimiter=',')
 
 
-def plot_data(data, name="", k_e=""):
+def plot_data(data, name="", k_e="", obstacle=""):
     plt.clf()
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_{name}.png"
-    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
-    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = f"data_{k_e}_{obstacle}" + current_date.strftime('%Y%m%d')
+    folder_name_2 = f"data_{obstacle}" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name_2):
         os.makedirs(folder_name_2)
     folder_name = os.path.join(folder_name_2, folder_name)
@@ -190,24 +190,21 @@ def run(k_e, o_num=None):
                     max_and_constant[i][1] = k_g
                     max_and_constant[i][2] = k_h
 
+    save_csv(avg_a_star, "avg_a_star", str(k_e), str(o_num))
+    save_csv(avg_a_star_smooth, "avg_a_star_smooth", str(k_e), str(o_num))
+    save_csv(avg_theta_star, "avg_theta_star", str(k_e), str(o_num))
+    save_csv(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e), str(o_num))
 
-
-    save_csv(avg_a_star, "avg_a_star", str(k_e))
-    save_csv(avg_a_star_smooth, "avg_a_star_smooth", str(k_e))
-    save_csv(avg_theta_star, "avg_theta_star", str(k_e))
-    save_csv(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e))
-
-    plot_data(avg_a_star, "avg_a_star", str(k_e))
-    plot_data(avg_a_star_smooth, "avg_a_star_smooth", str(k_e))
-    plot_data(avg_theta_star, "avg_theta_star", str(k_e))
-    plot_data(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e))
+    plot_data(avg_a_star, "avg_a_star", str(k_e), str(o_num))
+    plot_data(avg_a_star_smooth, "avg_a_star_smooth", str(k_e), str(o_num))
+    plot_data(avg_theta_star, "avg_theta_star", str(k_e), str(o_num))
+    plot_data(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e), str(o_num))
 
     # save datas
-
     current_date = datetime.now()
     filename = current_date.strftime('%Y%m%d') + f"_max.txt"
-    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
-    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = f"data_{k_e}_{o_num}" + current_date.strftime('%Y%m%d')
+    folder_name_2 = f"data_{o_num}" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name_2):
         os.makedirs(folder_name_2)
     folder_name = os.path.join(folder_name_2, folder_name)
