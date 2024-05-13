@@ -11,23 +11,31 @@ from matplotlib.ticker import LinearLocator
 
 from multiprocessing import Process
 
+import argparse
+
 # map generation
 xsize = 40
 ysize = 40
 zsize = 10
 grid_size = (xsize, ysize, zsize)
-obstacle_num = 30
+
+# change this num to change density of environment
+OBSTACLE_NUM = 30
 
 # size_list must contain even number
 size_list = [2,4,6]
 
-def energy_calculation(k_const=None):
+def energy_calculation(k_const=None, o_num=None):
     # print("##### energy consumption calculation #####")
 
     a_star_delta = []
     a_star_smooth_delta = []
     theta_star_delta = []
     theta_star_smooth_delta = []
+
+    obstacle_num = OBSTACLE_NUM
+    if o_num != None:
+        obstacle_num = o_num
 
     for i in range(100):
         # print(f"$$$ iter : {i}")
@@ -152,21 +160,7 @@ def plot_data(data, name="", k_e=""):
 """ make datas and plotting here """
 INF_MINUS = -100000000000
 
-def run(k_e):
-    # test code
-    current_date = datetime.now()
-    filename = current_date.strftime('%Y%m%d') + f"_max.txt"
-    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
-    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
-    if not os.path.exists(folder_name_2):
-        os.makedirs(folder_name_2)
-    folder_name = os.path.join(folder_name_2, folder_name)
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
-    filename = os.path.join(folder_name, filename)
-
-    f = open(filename, 'w')
-
+def run(k_e, o_num=None):
     avg_a_star = np.zeros((10,10))
     avg_a_star_smooth = np.zeros((10,10))
     avg_theta_star = np.zeros((10,10))
@@ -182,7 +176,7 @@ def run(k_e):
             # os.system('clear')
             print(f"## k_g : {k_g} k_h : {k_h} k_e : {k_e}")
             
-            result = energy_calculation(k_constant)
+            result = energy_calculation(k_constant, o_num)
 
             avg_a_star[k_g//100-1][k_h//100-1] = result[0]
             avg_a_star_smooth[k_g//100-1][k_h//100-1] = result[1]
@@ -208,6 +202,20 @@ def run(k_e):
     plot_data(avg_theta_star, "avg_theta_star", str(k_e))
     plot_data(avg_theta_star_smooth, "avg_theta_star_smooth", str(k_e))
 
+    # save datas
+
+    current_date = datetime.now()
+    filename = current_date.strftime('%Y%m%d') + f"_max.txt"
+    folder_name = f"data_{k_e}_" + current_date.strftime('%Y%m%d')
+    folder_name_2 = "data_" + current_date.strftime('%Y%m%d')
+    if not os.path.exists(folder_name_2):
+        os.makedirs(folder_name_2)
+    folder_name = os.path.join(folder_name_2, folder_name)
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    filename = os.path.join(folder_name, filename)
+
+    f = open(filename, 'w')
 
     result_str = ["a_star", "a_star_smooth", "theta_star", "theta_star_smooth"]
     for i, result_val in enumerate(max_and_constant):
@@ -216,17 +224,23 @@ def run(k_e):
     f.close()
 
 
-""" use multiprocessing technique """
-procs = []
-for i in range(1, 1001):
-    print(f"Process {i} starts")
-    p = Process(target=run, args=(i, ))
-    p.start()
-    procs.append((p, i))
+parser = argparse.ArgumentParser()
+parser.add_argument('-obstacle', help=' :put obstacle number in environment', default=30)
+args = parser.parse_args()
 
-for p, i in procs:
-    p.join()
-    print(f"Process {i} joins")
+if __name__ == '__main__':
+
+    """ use multiprocessing technique """
+    procs = []
+    for i in range(1, 1001):
+        print(f"Process {i} starts")
+        p = Process(target=run, args=(i,int(args.obstacle), ))
+        p.start()
+        procs.append((p, i))
+
+    for p, i in procs:
+        p.join()
+        print(f"Process {i} joins")
 
 
 # result = []
