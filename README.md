@@ -90,7 +90,7 @@ $$F(p) = k_gG(p) + k_hH(p) + k_eE(p)$$
 
 $G(p)$는 `g_val`, $H(p)$는 `h_val`, $E(p)$는 `e_val`이다. $k_g, k_h, h_e$는 상수들로, 상수들은 실험적으로 조정되었다. 현재 상수값들은 확정되지 않았다.
 
-상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 구해보았지만, 최적의 상수값을 찾을 수 없었다.
+상수 값을 정하기 위해 energy consumption을 계산하는 코드는 [grid_env_generator_only_energy_calculation.py](/controllers/grid_env_generator/grid_env_generator_only_energy_calculation.py)에 나와있다. [path_generator.py](/controllers/grid_env_generator/path_generator.py)의 `K_E, K_G, K_H` 값을 변화시켜가면서 energy constraint가 있는 경우, energy constraint가 없는 경우에서 a_star, theta_star가 만들어낸 path의 energy consumption 차이의 평균과 중앙값을 구해보았지만, 에너지 함수를 최소한으로 줄일수록 모델의 성능이 미미하게 좋아지는 결과가 나와서, 이 cost function은 적절하지 않은 함수라 판단했다. 
 
 #### Proposed cost function 2
 
@@ -100,7 +100,7 @@ $$F(p) = G(p) + k_hH(p)$$
 
 여기서는 $G(p)$를 업데이트 할 때 식을 다음과 같이 변경했다.
 
-$$G(p) \larr \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
+$$G(p) {\larr} \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
 
 여기서 ${distance}(s,v)$는 현재 지점에서 update할 다음 지점 사이의 거리이고, ${energy}(s,v)$는 현재 지점에서 update할 다음 지점 사이의 예상 에너지 소비량이다. 
 
