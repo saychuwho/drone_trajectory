@@ -547,7 +547,7 @@ def write_path(paths, path_type="default"):
     filename += ("_" + path_type)
     filename += ".txt"
 
-    folder_name = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = "data_generation_" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
@@ -581,7 +581,7 @@ def plot_path(matrix, paths, path_type="default"):
     filename = "plot_path_" + current_date.strftime('%Y%m%d')
     filename += ("_" + path_type)
 
-    folder_name = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = "data_generation_" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 

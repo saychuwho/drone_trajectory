@@ -7,10 +7,15 @@ xsize = 40
 ysize = 40
 zsize = 10
 grid_size = (xsize, ysize, zsize)
+
+# change the density of environment
 obstacle_num = 30
 
 # size_list must contain even number
 size_list = [2,4,6]
+
+# k_const = [K_G, K_H, K_E]
+k_const = [100,100,823]
 
 # coordinate는 (x,y,z) / np.array에서는 (z,x,y)
 # start = (0,0,0)
@@ -42,12 +47,12 @@ if start[0] == -1 or dest[0] == -1:
     exit()
 
 print("... calculating path ...")
-paths, paths_smooth, p_e_sum, p_s_e_sum = a_star(grid, grid_size, start, dest, False)
-paths_theta, paths_smooth_theta, p_e_sum_theta, p_s_e_sum_theta = theta_star(grid, grid_size, start, dest, False)
+paths, paths_smooth, p_e_sum, p_s_e_sum = a_star(grid, grid_size, start, dest, False, False, k_const)
+paths_theta, paths_smooth_theta, p_e_sum_theta, p_s_e_sum_theta = theta_star(grid, grid_size, start, dest, False, False, k_const)
 
 print("... calculating path with energy constraint ...")
-paths_e, paths_smooth_e, p_e_e_sum, p_s_e_e_sum = a_star(grid, grid_size, start, dest, False, True)
-paths_e_theta, paths_smooth_e_theta, p_e_e_sum_theta, p_s_e_e_sum_theta = theta_star(grid, grid_size, start, dest, False, True)
+paths_e, paths_smooth_e, p_e_e_sum, p_s_e_e_sum = a_star(grid, grid_size, start, dest, False, True, k_const)
+paths_e_theta, paths_smooth_e_theta, p_e_e_sum_theta, p_s_e_e_sum_theta = theta_star(grid, grid_size, start, dest, False, True, k_const)
 
 print("... energy consumption estimate ...")
 print(f"> a-star : {round(p_e_sum,2)} / a-star energy {round(p_e_e_sum,2)} / a-star smooth {round(p_s_e_sum,2)} / a-star energy smooth {round(p_s_e_e_sum,2)}")

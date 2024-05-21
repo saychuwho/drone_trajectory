@@ -150,7 +150,7 @@ def matrix_plot(matrix, m_type):
     plt.colorbar()
     plt.title('generated map')
 
-    folder_name = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = "data_generation_" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
@@ -171,7 +171,7 @@ def grid_plot(grid : np.array, x_size : int, y_size : int):
     filename = "plot_" + current_date.strftime('%Y%m%d') + "_grid.png"
     fig, axs = plt.subplots(grid.shape[0], 1, figsize=(x_size, y_size))
 
-    folder_name = "data_" + current_date.strftime('%Y%m%d')
+    folder_name = "data_generation_" + current_date.strftime('%Y%m%d')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
