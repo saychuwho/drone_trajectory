@@ -18,6 +18,8 @@ This project generates energy-efficient drone path based on [webots](https://cyb
       - [Proposed cost function 1](#proposed-cost-function-1)
       - [Proposed cost function 2](#proposed-cost-function-2)
     - [Shortest path algorithm with energy model](#shortest-path-algorithm-with-energy-model)
+      - [Using first cost function](#using-first-cost-function)
+      - [Using second cost function](#using-second-cost-function)
     - [Drone Controller](#drone-controller)
   - [References](#references)
 
@@ -100,22 +102,44 @@ $$F(p) = G(p) + k_hH(p)$$
 
 여기서는 $G(p)$를 업데이트 할 때 식을 다음과 같이 변경했다.
 
-$$G(p) {\larr} \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
+$$G(p) = \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
 
 여기서 ${distance}(s,v)$는 현재 지점에서 update할 다음 지점 사이의 거리이고, ${energy}(s,v)$는 현재 지점에서 update할 다음 지점 사이의 예상 에너지 소비량이다. 
 
+이 cost function의 의도는 "현재 지점에서 다음 update 할 지점을 선택할 때, 만약 거리가 같은 지점이 여러 곳 있다면, 그 중 에너지를 최소화하는 지점을 선택하자"이다. 
+
 상수값 $k_g, k_h, k_e$는 현재 시뮬레이션 데이터를 통해 조정 중이다.
+
+현재까지 나온 결과로는 최적의 상수값은 다음과 같다. 여기서 `obstacle_num`은 environment에 존재하는 obstacle의 숫자이고, 이 수가 클 수록 environment의 density가 증가한다.
+
+- a_star_smooth
+  - obstacle_num=30 : $k_g = 100, k_h = 100, k_e = 823$, energy value difference = 8.62
+  - obstacle_num=50 : $k_g = 700, k_h = 100, k_e = 673$, energy value difference = 5.99
+- theta_star_smooth
+  - obstacle_num=30 : $k_g = 800, k_h = 700, k_e = 10$, energy value difference = 2.03
+  - obstacle_num=50 : $k_g = 900, k_h = 400, k_e = 767$, energy value difference = 4.19
 
 ### Shortest path algorithm with energy model
 
-아래 사진 중 첫 번째 사진은 에너지 모델을 적용하지 않았을 때 Theta* algorithm으로 생성된 path이고, 두 번째 사진은 에너지 모델을 적용했을 때 Theta* algorithm으로 생성된 path이다. 
+#### Using first cost function
 
+아래 사진 중 첫 번째 사진은 에너지 모델을 적용하지 않았을 때 Theta* algorithm으로 생성된 path이고, 두 번째 사진은 첫 번째 cost function을 이용한 에너지 모델을 적용했을 때 Theta* algorithm으로 생성된 path이다. 
 
 <img src="./image/plot_path_20240403_smooth_theta_star.png" width="50%">
 
 <img src="./image/plot_path_20240403_theta_star_energy_smooth.png" width="50%">
 
 비교해보면 energy model을 적용한 경우에는 고도의 상승을 피하는 경로를 찾아 가는 것을 알 수 있다.
+
+#### Using second cost function
+
+아래 사진 중 첫 번째 사진은 에너지 모델을 적용하지 않았을 때 A* algorithm으로 생성된 smooth path이고, 두 번째 사진은 첫 번째 cost function을 이용한 에너지 모델을 적용했을 때 A* algorithm으로 생성된 smooth path이다. 상수 값은 $k_g=100, k_h=100, k_e=823$이다.
+
+<img src="./image/plot_path_20240521_2_a_star_smooth.png" width="50%">
+
+<img src="./image/plot_path_20240521_2_a_star_smooth_energy.png" width="50%">
+
+비교해보면, energy model을 적용한 경우에는 고도를 최대한 낮추는 경로로 향하는 것을 볼 수 있다.
 
 ### Drone Controller
 
