@@ -154,10 +154,9 @@ def matrix_plot(matrix, m_type):
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
-    filename = "plot_" + current_date.strftime('%Y%m%d') + "_map"
-    if m_type == "occupancy":
+    filename = "plot_" + current_date.strftime('%Y%m%d') + f"_{m_type}"
+    if m_type[0] == "o":
         plt.title('generated occupancy matrix')
-        filename = "plot_" + current_date.strftime('%Y%m%d') + "_occupancy"
     filename += ".png"
 
     filename = os.path.join(folder_name, filename)
@@ -165,10 +164,10 @@ def matrix_plot(matrix, m_type):
     plt.savefig(filename)
 
 
-def grid_plot(grid : np.array, x_size : int, y_size : int):
+def grid_plot(grid : np.array, x_size : int, y_size : int, o_num=""):
     plt.clf()
     current_date = datetime.now()
-    filename = "plot_" + current_date.strftime('%Y%m%d') + "_grid.png"
+    filename = "plot_" + current_date.strftime('%Y%m%d') + f"_grid_{o_num}.png"
     fig, axs = plt.subplots(grid.shape[0], 1, figsize=(x_size, y_size))
 
     folder_name = "data_generation_" + current_date.strftime('%Y%m%d')

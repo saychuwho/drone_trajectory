@@ -9,7 +9,7 @@ zsize = 10
 grid_size = (xsize, ysize, zsize)
 
 # change the density of environment
-obstacle_num = 30
+obstacle_num = 50
 
 # size_list must contain even number
 size_list = [2,4,6]
@@ -31,13 +31,13 @@ print("... generating grid ...")
 grid = grid_gen(gen_occupancy_matrix, xsize, ysize, zsize)
 
 print("... plotting map matrix ...")
-matrix_plot(gen_map_matrix, "map")
+matrix_plot(gen_map_matrix, f"map_{obstacle_num}")
 
 print("... plotting occupancy matrix ...")
-matrix_plot(gen_occupancy_matrix, "occupancy")
+matrix_plot(gen_occupancy_matrix, f"occupancy_{obstacle_num}")
 
 print("... plotting grid ...")
-grid_plot(grid, xsize, ysize)
+grid_plot(grid, xsize, ysize, str(obstacle_num))
 
 print("... generating start, dest ...")
 start, dest = start_dest_generate(gen_occupancy_matrix, xsize, ysize, zsize)
@@ -59,25 +59,25 @@ print(f"> a-star : {round(p_e_sum,2)} / a-star energy {round(p_e_e_sum,2)} / a-s
 print(f"> theta-star : {round(p_e_sum_theta,2)} / theta-star energy {round(p_e_e_sum_theta,2)} / theta-star smooth {round(p_s_e_sum_theta,2)} / theta-star energy smooth {round(p_s_e_e_sum_theta,2)}")
 
 print("... writing path ...")
-write_path(paths, "a_star")
-write_path(paths_smooth, "smooth_a_star")
-write_path(paths_theta, "theta_star")
-write_path(paths_smooth_theta, "smooth_theta_star")
+write_path(paths, f"a_star_{obstacle_num}")
+write_path(paths_smooth, f"smooth_a_star_{obstacle_num}")
+write_path(paths_theta, f"theta_star_{obstacle_num}")
+write_path(paths_smooth_theta, f"smooth_theta_star_{obstacle_num}")
 
 print("... writing path with energy constraint ...")
-write_path(paths_e, "a_star_energy")
-write_path(paths_smooth_e, "a_star_energy_smooth")
-write_path(paths_e_theta, "theta_star_energy")
-write_path(paths_smooth_e_theta, "theta_star_energy_smooth")
+write_path(paths_e, f"a_star_energy_{obstacle_num}")
+write_path(paths_smooth_e, f"a_star_energy_smooth_{obstacle_num}")
+write_path(paths_e_theta, f"theta_star_energy_{obstacle_num}")
+write_path(paths_smooth_e_theta, f"theta_star_energy_smooth_{obstacle_num}")
 
 print("... plotting path on map matrix ...")
-plot_path(gen_map_matrix, paths, "1_a_star")
-plot_path(gen_map_matrix, paths_smooth, "2_a_star_smooth")
-plot_path(gen_map_matrix, paths_theta, "3_theta_star")
-plot_path(gen_map_matrix, paths_smooth_theta, "4_theta_star_smooth")
+plot_path(gen_map_matrix, paths, f"1_a_star_{obstacle_num}")
+plot_path(gen_map_matrix, paths_smooth, f"2_a_star_smooth_{obstacle_num}")
+plot_path(gen_map_matrix, paths_theta, f"3_theta_star_{obstacle_num}")
+plot_path(gen_map_matrix, paths_smooth_theta, f"4_theta_star_smooth_{obstacle_num}")
 
 print("... writing path with energy constraints ...")
-plot_path(gen_map_matrix, paths_e, "1_a_star_energy")
-plot_path(gen_map_matrix, paths_smooth_e, "2_a_star_smooth_energy")
-plot_path(gen_map_matrix, paths_e_theta, "3_theta_star_energy")
-plot_path(gen_map_matrix, paths_smooth_e_theta, "4_theta_star_smooth_energy")
+plot_path(gen_map_matrix, paths_e, f"1_a_star_energy_{obstacle_num}")
+plot_path(gen_map_matrix, paths_smooth_e, f"2_a_star_smooth_energy_{obstacle_num}")
+plot_path(gen_map_matrix, paths_e_theta, f"3_theta_star_energy_{obstacle_num}")
+plot_path(gen_map_matrix, paths_smooth_e_theta, f"4_theta_star_smooth_energy_{obstacle_num}")
