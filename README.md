@@ -6,7 +6,7 @@
 
 This project generates energy-efficient drone path based on [webots](https://cyberbotics.com/).
 
-## Table
+## Tablek
 
 - [drone\_trajectory](#drone_trajectory)
   - [Table](#table)
@@ -74,7 +74,7 @@ A* algorithm과 Theta* algorithm이 [path_generator.py](/controllers/grid_env_ge
 
 ### Energy Model for Drone
 
-[energy_model.py](/controllers/drone_controller/energy_model.py)에 drone의 energy model을 구현했다.
+[energy_model.py](/controllers/grid_env_controller/energy_model.py)에 drone의 energy model을 구현했다.
 
 Drone의 energy model은 [A power consumption model for multi-rotor small unmanned aircraft systems](https://doi.org/10.1109/ICUAS.2017.7991310)의 equation (14)와 equation (15)를 참고해 만들어졌다.
 
@@ -113,9 +113,11 @@ $$G(p) = \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
 현재까지 나온 결과로는 최적의 상수값은 다음과 같다. 여기서 `obstacle_num`은 environment에 존재하는 obstacle의 숫자이고, 이 수가 클 수록 environment의 density가 증가한다.
 
 - a_star_smooth
-  - obstacle_num=30 : $k_g = 100, k_h = 100, k_e = 823$, energy value difference = 8.62
+  - obstacle_num=10 : $k_g = 100, k_h = 100, k_e = 927$, energy value difference = 12.56
+  - obstacle_num=30 : $k_g = 700, k_h = 1000, k_e = 823$, energy value difference = 8.62
   - obstacle_num=50 : $k_g = 700, k_h = 100, k_e = 673$, energy value difference = 5.99
 - theta_star_smooth
+  - obstacle_num=10 : $k_g = 1000, k_h = 842, k_e = 842$, energy value difference = 8.08
   - obstacle_num=30 : $k_g = 800, k_h = 700, k_e = 10$, energy value difference = 2.03
   - obstacle_num=50 : $k_g = 900, k_h = 400, k_e = 767$, energy value difference = 4.19
 
