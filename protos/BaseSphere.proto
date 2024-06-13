@@ -1,0 +1,29 @@
+#VRML_SIM R2023b utf8
+# Describe the functionality of your PROTO here.
+
+
+PROTO BaseSphere [
+  field SFVec3f translation 1 1 0
+  field SFRotation rotation 0 0 1 0
+  field SFString name "base_sphere"
+  field SFColor baseColor 1 0 0
+]
+{
+  Solid {
+    translation IS translation
+    rotation IS rotation
+    children[
+      DEF BOX_SHAPE Shape{
+        appearance PBRAppearance{
+          baseColor IS baseColor
+          roughness 1
+          metalness 0
+        }
+        geometry Sphere{
+          radius 0.5
+        }
+      }
+    ]
+    name IS name
+  }
+}

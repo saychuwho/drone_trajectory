@@ -35,6 +35,15 @@ def proto_option_gen(name, translation, height, size):
 
     return ret_str
 
+def point_option_gen(name, translation, color):
+    proto_name_1 = 'BaseSphere {'
+    proto_name_2 = '}'
+    translation_str = f' translation {translation[0]} {translation[1]} {translation[2]}'
+    name_str = f' name "{name}"'
+    color_str = f' baseColor {color[0]} {color[1]} {color[2]}'
+    
+    return proto_name_1 + translation_str + name_str + color_str + proto_name_2
+
 
 def matrix_gen(map_list, x_size, y_size):
     map_matrix = np.zeros((x_size, y_size))

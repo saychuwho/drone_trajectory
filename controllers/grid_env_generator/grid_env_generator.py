@@ -9,6 +9,7 @@ from map_generator import *
 from path_generator import *
 from energy_model import *
 
+from datetime import datetime
 
 # create the Robot instance.
 supervisor = Supervisor()
@@ -18,6 +19,8 @@ timestep = int(supervisor.getBasicTimeStep())
 
 root_node = supervisor.getRoot()
 children_field = root_node.getField('children')
+
+""" Environment Generation """
 
 # map generation
 xsize = 40
@@ -109,6 +112,50 @@ plot_path(gen_map_matrix, paths_smooth_e, "a_star_energy_smooth")
 plot_path(gen_map_matrix, paths_e_theta, "theta_star_energy")
 plot_path(gen_map_matrix, paths_smooth_e_theta, "theta_star_energy_smooth")
 
+
+# Generate Ball Object in environment that represents path point
+current_date = datetime.now()
+
+a_star_path_filename = f"data_generation_{current_date.strftime('%Y%m%d')}\path_{current_date.strftime('%Y%m%d')}_a_star_energy_smooth.txt"
+theta_star_path_filename = f"data_generation_{current_date.strftime('%Y%m%d')}\path_{current_date.strftime('%Y%m%d')}_theta_star_energy_smooth.txt"
+
+f_a_star = open(a_star_path_filename, "r")
+f_theta_star = open(theta_star_path_filename, "r")
+
+ball_iter = 0
+while True:
+    line = f_a_star.readline()
+    if not line:
+        break
+
+    translation = list(map(float, line.split()))
+    color = [1,0,0]
+    name = f"a_star_point_{ball_iter}"
+
+    children_field.importMFNodeFromString(-1, point_option_gen(name, translation, color))
+
+    ball_iter += 1
+
+# ball_iter = 0
+# while True:
+#     line = f_theta_star.readline()
+#     if not line:
+#         break
+
+#     translation = list(map(float, line.split()))
+#     color = [0,0,1]
+#     name = f"theta_star_point_{ball_iter}"
+
+#     children_field.importMFNodeFromString(-1, point_option_gen(name, translation, color))
+
+#     ball_iter += 1
+
+f_a_star.close()
+f_theta_star.close()
+
+
+
+""" Webot environment setting """
 
 time_step_iter = 0
 

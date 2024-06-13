@@ -9,7 +9,7 @@ This project generates energy-efficient drone path based on [webots](https://cyb
 ## Tablek
 
 - [drone\_trajectory](#drone_trajectory)
-  - [Table](#table)
+  - [Tablek](#tablek)
   - [Pre-installation \& Execute](#pre-installation--execute)
   - [What's inside](#whats-inside)
     - [Environment representation](#environment-representation)
@@ -146,6 +146,10 @@ $$G(p) = \min(G(p), G(p) + k_g{distance}(s,v) + k_e{energy}(s,v))$$
 ### Drone Controller
 
 [drone_controller.py](/controllers/drone_controller/drone_controller.py)를 이용해 webots world에 있는 drone을 움직인다. 현재는 수동 조작밖에 안되지만, 추후 생성된 path를 따라가도록 controller를 만들 것이다.
+
+다음 사진은 Webots에서 생성된 A* smooth path를 표현한 것이다. 
+
+<img src="./image/generated_path_on_webots.png" width="100%">
 
 ## References
 

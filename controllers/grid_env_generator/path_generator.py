@@ -555,7 +555,8 @@ def write_path(paths, path_type="default"):
 
     with open(filename, 'w') as f:
         for item in paths:
-            f.write(str(grid_translation(item, False))+'\n')
+            point = grid_translation(item, False)
+            f.write(f"{point[0]} {point[1]} {point[2]}\n")
 
 
 def plot_path(matrix, paths, path_type="default"):
