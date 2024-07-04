@@ -1,4 +1,4 @@
-# drone_trajectory
+# Energy Efficient UAV Path Planning on Grid Environment
 
 <img src="./image/thumbnail.png" width="70%">
 
@@ -8,7 +8,7 @@ This project generates energy-efficient drone path based on [webots](https://cyb
 
 ## Tablek
 
-- [drone\_trajectory](#drone_trajectory)
+- [Energy Efficient UAV Path Planning on Grid Environment](#energy-efficient-uav-path-planning-on-grid-environment)
   - [Tablek](#tablek)
   - [Pre-installation \& Execute](#pre-installation--execute)
   - [What's inside](#whats-inside)
